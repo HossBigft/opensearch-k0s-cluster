@@ -1,0 +1,7 @@
+cluster.name: docker-cluster
+network.host: 0.0.0.0
+discovery.type: single-node
+
+# Security config
+plugins.security.disabled: true
+logger.org.opensearch.http: TRACE
