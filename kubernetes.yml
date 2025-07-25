@@ -165,6 +165,7 @@ spec:
               cpu: "2000m"
               memory: "2Gi"
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - IPC_LOCK
@@ -260,6 +261,7 @@ spec:
               cpu: "2000m"
               memory: "2Gi"
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - IPC_LOCK
