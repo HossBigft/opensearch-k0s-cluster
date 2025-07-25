@@ -1,320 +1,125 @@
 ---
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: opensearch-dashboards
-spec:
-  ports:
-    - name: "5601"
-      port: 5601
-      targetPort: 5601
-  selector:
-    io.kompose.service: opensearch-dashboards
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: opensearch-node1
-spec:
-  ports:
-    - name: "9200"
-      port: 9200
-      targetPort: 9200
-    - name: "9600"
-      port: 9600
-      targetPort: 9600
-  selector:
-    io.kompose.service: opensearch-node1
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: opensearch-node2
-spec:
-  ports:
-    - name: "9200"
-      port: 9200
-      targetPort: 9200
-    - name: "9600"
-      port: 9600
-      targetPort: 9600
-  selector:
-    io.kompose.service: opensearch-node2
+  name: opensearch-config
+data:
+  OPENSEARCH_INITIAL_ADMIN_PASSWORD: Aizuku5uf5aenoo2ulee
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: opensearch-dashboards
+  name: opensearch
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: opensearch-dashboards
+      app: opensearch
   template:
     metadata:
       labels:
-        io.kompose.service: opensearch-dashboards
+        app: opensearch
     spec:
       containers:
-        - name: opensearch-dashboards
-          image: opensearchproject/opensearch-dashboards:latest
+        - name: opensearch
+          image: opensearchproject/opensearch:3.1.0
           env:
-            - name: OPENSEARCH_HOSTS
-              value: '["https://opensearch-node1:9200","https://opensearch-node2:9200"]'
+              - name: discovery.type
+                value: "single-node"
+              - name: cluster.name
+                value: "dev-cluster"
+              - name: node.name
+                value: "opensearch-dev"
+              - name: bootstrap.memory_lock
+                value: "true"
+              - name: network.host
+                value: "0.0.0.0"
+              - name: OPENSEARCH_JAVA_OPTS
+                value: "-Xms512m -Xmx512m"
+              - name: DISABLE_SECURITY_PLUGIN
+                value: "true"
           envFrom:
             - configMapRef:
-                name: env
+                name: opensearch-config
+          ports:
+            - containerPort: 9200
+          volumeMounts:
+            - mountPath: /usr/share/opensearch/data
+              name: data
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "1.5Gi"
+      volumes:
+        - name: data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch
+spec:
+  type: NodePort
+  ports:
+    - port: 9200
+      targetPort: 9200
+      nodePort: 30920
+  selector:
+    app: opensearch
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboards
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboards
+  template:
+    metadata:
+      labels:
+        app: dashboards
+    spec:
+      containers:
+        - name: dashboards
+          image: opensearchproject/opensearch-dashboards:3.1.0
+          env:
+            - name: OPENSEARCH_HOSTS
+              value: '["http://opensearch:9200"]'
+            - name: OPENSEARCH_USERNAME
+              value: "admin"
+            - name: OPENSEARCH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: opensearch-config
+                  key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
           ports:
             - containerPort: 5601
-              protocol: TCP
           resources:
             requests:
               cpu: "200m"
               memory: "512Mi"
             limits:
-              cpu: "1000m"
-              memory: "1Gi"
-          readinessProbe:
-            httpGet:
-              path: /api/status
-              port: 5601
-              scheme: HTTP
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /api/status
-              port: 5601
-              scheme: HTTP
-            initialDelaySeconds: 60
-            periodSeconds: 30
-      restartPolicy: Always
-
----
-apiVersion: v1
-data:
-  OPENSEARCH_INITIAL_ADMIN_PASSWORD: Aizuku5uf5aenoo2ulee
-kind: ConfigMap
-metadata:
-  name: env
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: opensearch-node1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      io.kompose.service: opensearch-node1
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        io.kompose.service: opensearch-node1
-    spec:
-      initContainers:
-        - name: init-sysctl
-          image: busybox:1.35
-          command:
-            - sh
-            - -c
-            - |
-              sysctl -w vm.max_map_count=262144
-              echo "vm.max_map_count set successfully"
-          securityContext:
-            privileged: true
-      containers:
-        - name: opensearch-node1
-          image: opensearchproject/opensearch:latest
-          env:
-            - name: OPENSEARCH_JAVA_OPTS
-              value: "-Xms1024m -Xmx1024m"
-            - name: cluster.initial_cluster_manager_nodes
-              value: opensearch-node1,opensearch-node2
-            - name: cluster.name
-              value: opensearch-cluster
-            - name: discovery.seed_hosts
-              value: opensearch-node1,opensearch-node2
-            - name: node.name
-              value: opensearch-node1
-            - name: bootstrap.memory_lock
-              value: "true"
-            - name: network.host
-              value: "0.0.0.0"
-            - name: discovery.type
-              value: "zen"
-          envFrom:
-            - configMapRef:
-                name: env
-          ports:
-            - containerPort: 9200
-              protocol: TCP
-            - containerPort: 9600
-              protocol: TCP
-          resources:
-            requests:
               cpu: "500m"
-              memory: "1.5Gi"
-            limits:
-              cpu: "2000m"
-              memory: "2Gi"
-          securityContext:
-            privileged: true
-            capabilities:
-              add:
-                - IPC_LOCK
-                - SYS_RESOURCE
-            runAsUser: 1000
-            runAsGroup: 1000
-          volumeMounts:
-            - mountPath: /usr/share/opensearch/data
-              name: opensearch-data1
-          readinessProbe:
-            httpGet:
-              path: /_cluster/health
-              port: 9200
-              scheme: HTTPS
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /_cluster/health
-              port: 9200
-              scheme: HTTPS
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
-      restartPolicy: Always
-      volumes:
-        - name: opensearch-data1
-          persistentVolumeClaim:
-            claimName: opensearch-data1
+              memory: "4Gi"
 
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: opensearch-node2
+  name: dashboards
 spec:
-  replicas: 1
+  type: NodePort
+  ports:
+    - port: 5601
+      targetPort: 5601
+      nodePort: 30561
   selector:
-    matchLabels:
-      io.kompose.service: opensearch-node2
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        io.kompose.service: opensearch-node2
-    spec:
-      initContainers:
-        - name: init-sysctl
-          image: busybox:1.35
-          command:
-            - sh
-            - -c
-            - |
-              sysctl -w vm.max_map_count=262144
-              echo "vm.max_map_count set successfully"
-          securityContext:
-            privileged: true
-      containers:
-        - name: opensearch-node2
-          image: opensearchproject/opensearch:latest
-          env:
-            - name: OPENSEARCH_JAVA_OPTS
-              value: "-Xms1024m -Xmx1024m"
-            - name: cluster.initial_cluster_manager_nodes
-              value: opensearch-node1,opensearch-node2
-            - name: cluster.name
-              value: opensearch-cluster
-            - name: discovery.seed_hosts
-              value: opensearch-node1,opensearch-node2
-            - name: node.name
-              value: opensearch-node2
-            - name: bootstrap.memory_lock
-              value: "true"
-            - name: network.host
-              value: "0.0.0.0"
-            - name: discovery.type
-              value: "zen"
-          envFrom:
-            - configMapRef:
-                name: env
-          ports:
-            - containerPort: 9200
-              protocol: TCP
-            - containerPort: 9600
-              protocol: TCP
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1.5Gi"
-            limits:
-              cpu: "2000m"
-              memory: "2Gi"
-          securityContext:
-            privileged: true
-            capabilities:
-              add:
-                - IPC_LOCK
-                - SYS_RESOURCE
-            runAsUser: 1000
-            runAsGroup: 1000
-          volumeMounts:
-            - mountPath: /usr/share/opensearch/data
-              name: opensearch-data2
-          readinessProbe:
-            httpGet:
-              path: /_cluster/health
-              port: 9200
-              scheme: HTTPS
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /_cluster/health
-              port: 9200
-              scheme: HTTPS
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
-      restartPolicy: Always
-      volumes:
-        - name: opensearch-data2
-          persistentVolumeClaim:
-            claimName: opensearch-data2
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: opensearch-data1
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: openebs-hostpath
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: opensearch-data2
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: openebs-hostpath
+    app: dashboards
