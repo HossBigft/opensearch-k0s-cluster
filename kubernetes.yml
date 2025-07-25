@@ -113,8 +113,6 @@ spec:
         - env:
             - name: OPENSEARCH_JAVA_OPTS
               value: -Xms1024m -Xmx1024m
-            - name: bootstrap.memory_lock
-              value: "true"
             - name: cluster.initial_cluster_manager_nodes
               value: opensearch-node1,opensearch-node2
             - name: cluster.name
@@ -155,6 +153,7 @@ spec:
   resources:
     requests:
       storage: 100Mi
+  storageClassName: local-path
 
 ---
 apiVersion: apps/v1
@@ -185,8 +184,6 @@ spec:
         - env:
             - name: OPENSEARCH_JAVA_OPTS
               value: -Xms1024m -Xmx1024m
-            - name: bootstrap.memory_lock
-              value: "true"
             - name: cluster.initial_cluster_manager_nodes
               value: opensearch-node1,opensearch-node2
             - name: cluster.name
@@ -222,4 +219,5 @@ spec:
   resources:
     requests:
       storage: 100Mi
+  storageClassName: local-path
 
