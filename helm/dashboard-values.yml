@@ -1,0 +1,25 @@
+# OpenSearch Dashboards Configuration
+opensearchHosts: "http://opensearch-cluster-master:9200"
+replicaCount: 1
+
+# NodePort service for Dashboards
+service:
+  type: NodePort
+  port: 5601
+  nodePort: 30601
+
+# Dashboards configuration
+config:
+  opensearch_dashboards.yml: |
+    server.host: 0.0.0.0
+    opensearch.hosts: [http://opensearch-cluster-master:9200]
+    opensearch.ssl.verificationMode: none
+
+# Resource limits
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
