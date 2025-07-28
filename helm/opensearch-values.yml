@@ -39,7 +39,10 @@ extraEnvs:
   - name: OPENSEARCH_JAVA_OPTS
     value: "-Xms256m -Xmx512m"
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-    value: "Aizuku5uf5aenoo2ulee"
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret
+        key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
   - name: cluster.initial_master_nodes
     value: null
 
