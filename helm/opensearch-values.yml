@@ -12,14 +12,14 @@ config:
   opensearch.yml: |
     cluster.name: opensearch-cluster
     network.host: 0.0.0.0
-    plugins.security.disabled: true
     discovery.type: single-node
     # disable ml sync job spam in logs
     plugins.ml_commons.sync_up_job_interval_in_seconds: 0
 
 # Disable security for development
 securityConfig:
-  enabled: false
+  enabled: true
+  createDemoConfig: true
 
 # Resource allocation for self-hosted environment
 resources:
@@ -44,8 +44,7 @@ extraEnvs:
       secretKeyRef:
         name: opensearch-admin-secret
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-  - name: cluster.initial_master_nodes
-    value: null
+
 
 
 
