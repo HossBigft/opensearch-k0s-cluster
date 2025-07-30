@@ -1,6 +1,7 @@
 # OpenSearch Configuration for k0s cluster
 clusterName: "opensearch-cluster"
 replicas: 1
+singleNode:true
 # NodePort service configuration
 service:
   type: NodePort
