@@ -6,13 +6,13 @@ metadata:
 spec:
   hosts:
   - ssh:
-      address: 93.115.14.96
+      address: ${CONTROLLER_IP}
       user: root
       port: 22
       keyPath: ~/.ssh/id_hoster.pub
     role: controller
   - ssh:
-      address: 213.109.146.206
+      address: ${WORKER_IP}
       user: root
       port: 22
       keyPath: ~/.ssh/id_hoster.pub
