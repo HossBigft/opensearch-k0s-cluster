@@ -13,14 +13,17 @@ spec:
       hooks:
         apply:
           before:
-            - mkdir -p /etc/systemd/system/k0scontroller.service.d
-            - |
-              cat <<EOF > /etc/systemd/system/k0scontroller.service.d/override.conf
-              [Unit]
-              After=systemd-timesyncd.service
-              Wants=systemd-timesyncd.service
-              EOF
-            - systemctl daemon-reload
+          - mkdir -p /etc/systemd/system/k0scontroller.service.d
+          - |
+            cat <<EOF > /etc/systemd/system/k0scontroller.service.d/override.conf
+            [Unit]
+            After=systemd-timesyncd.service
+            Wants=systemd-timesyncd.service
+
+            [Service]
+            ExecStartPre=/bin/bash -c 'while [ "\$(timedatectl show -p NTPSynchronized --value)" != "yes" ]; do sleep 1; done'
+            EOF
+          - systemctl daemon-reload
     - role: worker
       ssh:
         address: ${WORKER_IP}
