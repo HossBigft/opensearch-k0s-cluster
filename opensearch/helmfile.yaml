@@ -1,0 +1,18 @@
+repositories:
+  - name: opensearch
+    url: https://opensearch-project.github.io/helm-charts
+
+releases:
+  - name: opensearch
+    namespace: opensearch
+    chart: opensearch/opensearch
+    version: 2.14.1
+    values:
+      - values/opensearch-values.yaml
+
+  - name: opensearch-dashboards
+    namespace: opensearch
+    chart: opensearch/opensearch-dashboards
+    version: 2.14.1
+    values:
+      - values/dashboards-values.yaml

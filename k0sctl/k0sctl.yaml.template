@@ -5,18 +5,27 @@ metadata:
   user: admin
 spec:
   hosts:
-  - ssh:
-      address: ${CONTROLLER_IP}
-      user: root
-      port: 22
-      keyPath: ~/.ssh/id_hoster.pub
-    role: controller
-  - ssh:
-      address: ${WORKER_IP}
-      user: root
-      port: 22
-      keyPath: ~/.ssh/id_hoster.pub
-    role: worker
+    - role: controller
+      ssh:
+        address: ${CONTROLLER_IP}
+        user: root
+        keyPath: ~/.ssh/id_hoster.pub
+      hooks:
+        apply:
+          before:
+            - mkdir -p /etc/systemd/system/k0scontroller.service.d
+            - |
+              cat <<EOF > /etc/systemd/system/k0scontroller.service.d/override.conf
+              [Unit]
+              After=systemd-timesyncd.service
+              Wants=systemd-timesyncd.service
+              EOF
+            - systemctl daemon-reload
+    - role: worker
+      ssh:
+        address: ${WORKER_IP}
+        user: root
+        keyPath: ~/.ssh/id_hoster.pub
   options:
     wait:
       enabled: true
