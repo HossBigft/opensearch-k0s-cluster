@@ -1,14 +1,12 @@
-# OpenSearch Configuration for k0s cluster
 clusterName: "opensearch-cluster"
 replicas: 1
-singleNode:true
-# NodePort service configuration
+singleNode: true
+
 service:
   type: NodePort
   port: 9200
   nodePort: 30920
 
-# OpenSearch configuration
 config:
   opensearch.yml: |
     cluster.name: opensearch-cluster
@@ -17,12 +15,12 @@ config:
     # disable ml sync job spam in logs
     plugins.ml_commons.sync_up_job_interval_in_seconds: 0
 
-# Disable security for development
+# Disable security for development 
 securityConfig:
   enabled: true
   createDemoConfig: true
 
-# Resource allocation for self-hosted environment
+
 resources:
   requests:
     cpu: "200m"
@@ -31,12 +29,11 @@ resources:
     cpu: "1000m"
     memory: "1Gi"
 
-# Persistent storage
 persistence:
   enabled: true
   size: 10Gi
   storageClass: "openebs-hostpath"
-# JVM heap settings and admin password
+
 extraEnvs:
   - name: OPENSEARCH_JAVA_OPTS
     value: "-Xms256m -Xmx512m"
