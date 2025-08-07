@@ -4,6 +4,18 @@ repositories:
   - name: longhorn
     url: https://charts.longhorn.io
 
+hooks:
+  - events: ["prepare"]
+    showlogs: true
+    command: bash
+    args:
+      - -c
+      - |
+        if ! kubectl -n opensearch get secret opensearch-admin-secret >/dev/null 2>&1; then
+          echo "Missing secret: opensearch-admin-secret" >&2
+          exit 1
+        fi
+
 releases:
   - name: longhorn
     namespace: longhorn-system
