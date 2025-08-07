@@ -31,8 +31,8 @@ resources:
 
 persistence:
   enabled: true
+  storageClass: "openebs-cstor"
   size: 10Gi
-  storageClass: "openebs-hostpath"
 
 extraEnvs:
   - name: OPENSEARCH_JAVA_OPTS
