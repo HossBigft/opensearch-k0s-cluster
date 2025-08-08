@@ -1,0 +1,17 @@
+# Certificate configuration
+ca:
+  duration: 8760h  # 1 year
+  renewBefore: 2160h  # 90 days
+
+node:
+  duration: 2160h  # 90 days
+  renewBefore: 720h  # 30 days
+  commonName: opensearch-cluster-master
+  dnsNames:
+    - opensearch-cluster-master
+    - opensearch-cluster-master.opensearch
+    - opensearch-cluster-master.opensearch.svc
+    - opensearch-cluster-master.opensearch.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1

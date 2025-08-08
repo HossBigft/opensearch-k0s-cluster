@@ -1,0 +1,76 @@
+---
+# Source: opensearch-certs/templates/certificates.yaml
+# Root CA Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opensearch-ca
+  namespace: opensearch
+spec:
+  isCA: true
+  commonName: opensearch-ca
+  secretName: opensearch-ca-secret
+  duration: 8760h
+  renewBefore: 2160h
+  subject:
+    organizationalUnits:
+      - "OpenSearch CA"
+    organizations:
+      - "OpenSearch"
+  privateKey:
+    algorithm: RSA
+    size: 4096
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+---
+# Source: opensearch-certs/templates/certificates.yaml
+# Node certificate for OpenSearch
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opensearch-certs
+  namespace: opensearch
+spec:
+  secretName: opensearch-certs
+  duration: 2160h
+  renewBefore: 720h
+  commonName: opensearch-cluster-master
+  dnsNames:
+    - opensearch-cluster-master
+    - opensearch-cluster-master.opensearch
+    - opensearch-cluster-master.opensearch.svc
+    - opensearch-cluster-master.opensearch.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth
+  issuerRef:
+    name: opensearch-ca-issuer
+    kind: ClusterIssuer
+---
+# Source: opensearch-certs/templates/certificates.yaml
+# Self-signed ClusterIssuer for root CA
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+# Source: opensearch-certs/templates/certificates.yaml
+# CA ClusterIssuer for OpenSearch certificates
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: opensearch-ca-issuer
+spec:
+  ca:
+    secretName: opensearch-ca-secret

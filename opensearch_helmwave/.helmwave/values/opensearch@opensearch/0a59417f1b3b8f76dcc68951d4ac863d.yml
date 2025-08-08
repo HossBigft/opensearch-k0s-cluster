@@ -1,0 +1,48 @@
+clusterName: "opensearch-cluster"
+replicas: 1
+singleNode: true
+
+service:
+  type: NodePort
+  port: 9200
+  nodePort: 30920
+
+config:
+  opensearch.yml: |
+    cluster.name: opensearch-cluster
+    network.host: 0.0.0.0
+    discovery.type: single-node
+    # disable ml sync job spam in logs
+    plugins.ml_commons.sync_up_job_interval_in_seconds: 0
+
+# Disable security for development 
+securityConfig:
+  enabled: true
+  createDemoConfig: true
+
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+
+persistence:
+  enabled: true
+  storageClass: "openebs-cstor"
+  size: 10Gi
+
+extraEnvs:
+  - name: OPENSEARCH_JAVA_OPTS
+    value: "-Xms256m -Xmx512m"
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret
+        key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+
+
+
+
