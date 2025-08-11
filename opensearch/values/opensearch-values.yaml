@@ -18,8 +18,36 @@ config:
 # Disable security for development 
 securityConfig:
   enabled: true
-  createDemoConfig: true
+  createDemoConfig: false
 
+  plugins.security.ssl.transport.pemcert_filepath: certs/tls.crt
+  plugins.security.ssl.transport.pemkey_filepath: certs/tls.key
+  plugins.security.ssl.transport.pemtrustedcas_filepath: certs/ca.crt
+  plugins.security.ssl.transport.enforce_hostname_verification: false
+  plugins.security.ssl.http.enabled: true
+  plugins.security.ssl.http.pemcert_filepath: certs/tls.crt
+  plugins.security.ssl.http.pemkey_filepath: certs/tls.key
+  plugins.security.ssl.http.pemtrustedcas_filepath: certs/ca.crt
+  plugins.security.allow_unsafe_democertificates: false
+  plugins.security.allow_default_init_securityindex: true
+  plugins.security.authcz.admin_dn:
+    - CN=opensearch-cluster-master,O=opensearch,L=opensearch,C=US
+  plugins.security.audit.type: internal_opensearch
+  plugins.security.enable_snapshot_restore_privilege: true
+  plugins.security.check_snapshot_restore_write_privileges: true
+  plugins.security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
+  plugins.security.system_indices.enabled: true
+  plugins.security.system_indices.indices:
+    - ".opendistro-alerting-config"
+    - ".opendistro-alerting-alert*"
+    - ".opendistro-anomaly-results*"
+    - ".opendistro-anomaly-detector*"
+    - ".opendistro-anomaly-checkpoints"
+    - ".opendistro-anomaly-detection-state"
+    - ".opendistro-reports-*"
+    - ".opendistro-notifications-*"
+    - ".opendistro-notebooks"
+    - ".opendistro-asynchronous-search-response*"
 
 resources:
   requests:
@@ -43,6 +71,14 @@ extraEnvs:
         name: opensearch-admin-secret
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
 
+extraVolumes:
+  - name: opensearch-certs
+    secret:
+      secretName: opensearch-certs
 
+extraVolumeMounts:
+  - name: opensearch-certs
+    mountPath: /usr/share/opensearch/config/certs
+    readOnly: true
 
 

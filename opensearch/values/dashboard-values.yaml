@@ -14,8 +14,15 @@ config:
   opensearch_dashboards.yml: |
     server.host: 0.0.0.0
     opensearch.hosts: [https://opensearch-cluster-master:9200]
-    opensearch.ssl.verificationMode: none
-
+    opensearch.ssl.certificateAuthorities: ["/usr/share/opensearch-dashboards/config/certs/ca.crt"]
+    opensearch.ssl.verificationMode: certificate
+    opensearch.username: admin
+    opensearch.password: ${OPENSEARCH_PASSWORD}
+    opensearch.requestHeadersAllowlist: ["securitytenant","Authorization"]
+    opensearch_security.multitenancy.enabled: true
+    opensearch_security.multitenancy.tenants.preferred: ["Private", "Global"]
+    opensearch_security.readonly_mode.roles: ["kibana_read_only"]
+    opensearch_security.cookie.secure: false
 replicaCount: 1
 
 service:
@@ -30,3 +37,14 @@ resources:
   limits:
     cpu: "500m"
     memory: "512Mi"
+
+
+extraVolumes:
+  - name: opensearch-ca
+    secret:
+      secretName: opensearch-ca-secret
+
+extraVolumeMounts:
+  - name: opensearch-ca
+    mountPath: /usr/share/opensearch-dashboards/config/certs
+    readOnly: true
