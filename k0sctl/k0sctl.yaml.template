@@ -8,8 +8,8 @@ spec:
     - role: controller
       ssh:
         address: ${CONTROLLER_IP}
-        user: root
-        keyPath: ~/.ssh/id_hoster.pub
+        user: ${SSH_USER}
+        keyPath: ${SSH_PRIVATE_KEY_PATH}
       hooks:
         apply:
           before:
@@ -27,8 +27,8 @@ spec:
     - role: worker
       ssh:
         address: ${WORKER_IP}
-        user: root
-        keyPath: ~/.ssh/id_hoster.pub
+        user: ${SSH_USER}
+        keyPath: ${SSH_PRIVATE_KEY_PATH}
   options:
     wait:
       enabled: true
