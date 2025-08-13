@@ -59,7 +59,7 @@ resources:
 
 persistence:
   enabled: true
-  storageClass: "openebs-cstor"
+  storageClass: "longhorn"
   size: 10Gi
 
 extraEnvs:
