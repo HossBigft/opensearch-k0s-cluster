@@ -1,5 +1,5 @@
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
   name: selfsigned-issuer
 spec:
@@ -29,7 +29,7 @@ spec:
     size: 4096
   issuerRef:
     name: selfsigned-issuer
-    kind: ClusterIssuer
+    kind: Issuer
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -59,4 +59,4 @@ spec:
     - client auth
   issuerRef:
     name: opensearch-ca-issuer
-    kind: ClusterIssuer
+    kind: Issuer
