@@ -55,11 +55,11 @@ extraEnvs:
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
 
 extraVolumes:
-  - name: opensearch-certs
+  - name: opensearch-nodes-cert
     secret:
-      secretName: opensearch-certs
+      secretName: opensearch-nodes-cert
 
 extraVolumeMounts:
-  - name: opensearch-certs
+  - name: opensearch-nodes-cert
     mountPath: /usr/share/opensearch/config/certs
     readOnly: true

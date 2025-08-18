@@ -1,29 +1,24 @@
+
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: selfsigned-issuer
+  namespace: opensearch
 spec:
   selfSigned: {}
 ---
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: opensearch-ca-issuer
-spec:
-  ca:
-    secretName: opensearch-ca-secret
----
+
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: opensearch-ca
-  namespace: {{ .Release.Namespace }}
+  namespace: opensearch
 spec:
   isCA: true
   commonName: opensearch-ca
   secretName: opensearch-ca-secret
-  duration: 8760h
-  renewBefore: 2160h
+  duration: 87600h   # 10 years
+  renewBefore: 720h  # renew 30 days early
   privateKey:
     algorithm: RSA
     size: 4096
@@ -31,24 +26,26 @@ spec:
     name: selfsigned-issuer
     kind: Issuer
 ---
+
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: opensearch-ca-issuer
+  namespace: opensearch
+spec:
+  ca:
+    secretName: opensearch-ca-secret
+---
+
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: opensearch-certs
-  namespace: {{ .Release.Namespace }}
+  name: opensearch-nodes
+  namespace: opensearch
 spec:
-  secretName: opensearch-certs
-  duration: 2160h
-  renewBefore: 720h
-  commonName: opensearch-cluster-master
-  dnsNames:
-    - opensearch-cluster-master
-    - opensearch-cluster-master.opensearch
-    - opensearch-cluster-master.opensearch.svc
-    - opensearch-cluster-master.opensearch.svc.cluster.local
-    - localhost
-  ipAddresses:
-    - 127.0.0.1
+  secretName: opensearch-nodes-cert
+  duration: 2160h        # 90 days
+  renewBefore: 720h      # 30 days before expiry
   privateKey:
     algorithm: RSA
     size: 2048
@@ -57,6 +54,11 @@ spec:
     - key encipherment
     - server auth
     - client auth
+  commonName: "*.opensearch.svc.cluster.local"
+  dnsNames:
+    - "*.opensearch"
+    - "*.opensearch.svc"
+    - "*.opensearch.svc.cluster.local"
   issuerRef:
     name: opensearch-ca-issuer
     kind: Issuer
