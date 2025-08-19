@@ -1,0 +1,14 @@
+controller:
+  service:
+    type: LoadBalancer   # or NodePort if you don’t have a cloud LB
+    ports:
+      http: 80
+      https: 443
+
+  # optional but common
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: true
+
+  replicaCount: 1

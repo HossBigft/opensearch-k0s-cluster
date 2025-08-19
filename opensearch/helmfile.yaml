@@ -5,6 +5,8 @@ repositories:
     url: https://charts.longhorn.io
   - name: jetstack
     url: https://charts.jetstack.io
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
 
 
 hooks:
@@ -61,3 +63,9 @@ releases:
     chart: opensearch/opensearch-dashboards
     values:
       - values/dashboard-values.yaml
+
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    chart: ingress-nginx/ingress-nginx 
+    values:
+      - values/ingress-nginx-values.yaml
