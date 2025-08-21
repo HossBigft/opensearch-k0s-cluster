@@ -1,11 +1,10 @@
 controller:
   service:
-    type: LoadBalancer   # or NodePort if you don’t have a cloud LB
+    type: NodePort
     ports:
       http: 80
       https: 443
 
-  # optional but common
   ingressClassResource:
     name: nginx
     enabled: true
