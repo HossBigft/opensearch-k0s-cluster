@@ -1,9 +1,9 @@
 controller:
   service:
     type: NodePort
-    ports:
-      http: 80
-      https: 443
+    nodePorts:
+      http: 30080
+      https: 30443
 
   ingressClassResource:
     name: nginx
