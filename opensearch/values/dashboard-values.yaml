@@ -46,8 +46,7 @@ extraVolumeMounts:
 
 ingress:
   enabled: true
-  className: nginx   
-  annotations: {}
+  className: nginx
   hosts:
     - host: os.gruzo.kz
       paths:
@@ -61,4 +60,4 @@ ingress:
   tls:
     - hosts:
         - os.gruzo.kz
-      secretName: opensearch-nodes-cert
+      secretName: os-gruzo-kz-tls   

@@ -62,3 +62,34 @@ spec:
   issuerRef:
     name: opensearch-ca-issuer
     kind: Issuer
+---
+
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+  namespace: opensearch
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@gruzo.kz   
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: os-gruzo-kz-cert
+  namespace: opensearch
+spec:
+  secretName: os-gruzo-kz-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: Issuer
+  dnsNames:
+    - os.gruzo.kz
