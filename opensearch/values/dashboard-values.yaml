@@ -58,15 +58,14 @@ ingress:
               port:
                 number: 80
     - host: opensearch.gruzo.kz
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: opensearch-dashboards
-                port:
-                  number: 80
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: opensearch-dashboards
+              port:
+                number: 80
   tls:
     - hosts:
         - os.gruzo.kz
