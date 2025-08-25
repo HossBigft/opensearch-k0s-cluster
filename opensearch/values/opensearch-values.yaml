@@ -1,17 +1,22 @@
 clusterName: "opensearch-cluster"
 replicas: 1
-singleNode: true
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 9200
-  nodePort: 30920
+  headless:
+    annotations: {}
 
 config:
   opensearch.yml: |
     cluster.name: opensearch-cluster
     network.host: 0.0.0.0
-    discovery.type: single-node
+    discovery.seed_hosts: ["opensearch-cluster-master-headless"]
+    cluster.initial_master_nodes: ["opensearch-cluster-0"]
+
+    node.roles: ["master", "data", "ingest"]
+
+
     # disable ml sync job spam in logs
     plugins.ml_commons.sync_up_job_interval_in_seconds: 0
     
@@ -35,10 +40,10 @@ securityConfig:
 resources:
   requests:
     cpu: "200m"
-    memory: "512Mi"
+    memory: "2Gi"
   limits:
     cpu: "1000m"
-    memory: "1Gi"
+    memory: "2Gi"
 
 persistence:
   enabled: true
@@ -47,12 +52,13 @@ persistence:
 
 extraEnvs:
   - name: OPENSEARCH_JAVA_OPTS
-    value: "-Xms256m -Xmx512m"
+    value: "-Xms1g -Xmx1g"
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
       secretKeyRef:
         name: opensearch-admin-secret
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+
 
 extraVolumes:
   - name: opensearch-nodes-cert
