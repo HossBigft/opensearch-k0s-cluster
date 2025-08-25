@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opensearch-nodes
+  namespace: opensearch
+spec:
+  secretName: opensearch-nodes-cert
+  duration: 2160h        # 90 days
+  renewBefore: 720h      # 30 days before expiry
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth
+  commonName: "*.opensearch.svc.cluster.local"
+  dnsNames:
+    - "*.opensearch"
+    - "*.opensearch.svc"
+    - "*.opensearch.svc.cluster.local"
+  issuerRef:
+    name: opensearch-ca-issuer
+    kind: Issuer

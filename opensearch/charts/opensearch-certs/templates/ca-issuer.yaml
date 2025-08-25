@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: opensearch-ca-issuer
+  namespace: opensearch
+spec:
+  ca:
+    secretName: opensearch-ca-secret
