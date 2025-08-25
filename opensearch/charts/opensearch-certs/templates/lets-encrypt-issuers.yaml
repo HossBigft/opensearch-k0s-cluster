@@ -1,12 +1,13 @@
+# Staging issuer
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-staging
+  name: le-stag
   namespace: opensearch
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: admin@gruzo.kz   
+    email: admin@gruzo.kz
     privateKeySecretRef:
       name: letsencrypt-staging-account-key
     solvers:
@@ -14,17 +15,19 @@ spec:
           ingress:
             class: nginx
 ---
-
+# Production issuer
 apiVersion: cert-manager.io/v1
-kind: Certificate
+kind: Issuer
 metadata:
-  name: os-gruzo-kz-cert
+  name: le-prod
   namespace: opensearch
 spec:
-  secretName: os-gruzo-kz-tls
-  issuerRef:
-    name: letsencrypt-staging
-    kind: Issuer
-  dnsNames:
-    - os.gruzo.kz
-    - opensearch.gruzo.kz
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@gruzo.kz
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
