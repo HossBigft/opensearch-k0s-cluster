@@ -29,6 +29,11 @@ spec:
         address: ${WORKER_IP}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
+    - role: worker
+      ssh:
+        address: ${WORKER2_IP}
+        user: ${SSH_USER}
+        keyPath: ${SSH_PRIVATE_KEY_PATH}
   options:
     wait:
       enabled: true
