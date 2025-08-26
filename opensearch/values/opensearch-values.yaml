@@ -11,11 +11,11 @@ config:
   opensearch.yml: |
     cluster.name: opensearch-cluster
     network.host: 0.0.0.0
+    plugins.security.allow_default_init_securityindex: true
+    
     discovery.seed_hosts: ["opensearch-cluster-master-headless"]
     cluster.initial_master_nodes: ["opensearch-cluster-0"]
-
     node.roles: ["master", "data", "ingest"]
-
 
     # disable ml sync job spam in logs
     plugins.ml_commons.sync_up_job_interval_in_seconds: 0
