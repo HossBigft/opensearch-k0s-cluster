@@ -1,5 +1,5 @@
 clusterName: "opensearch-cluster"
-replicas: 1
+replicas: 3
 
 service:
   type: ClusterIP
@@ -52,7 +52,42 @@ extraEnvs:
     value: "/usr/share/opensearch/config/certs/tls.key"
   - name: plugins.security.ssl.http.pemtrustedcas_filepath
     value: "/usr/share/opensearch/config/certs/ca.crt"
-
+  # Cluster configuration for multiple nodes
+  - name: "cluster.name"
+    value: "opensearch-cluster"
+  - name: "network.host"
+    value: "0.0.0.0"
+  - name: "node.name"
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+  - name: "discovery.seed_hosts"
+    value: "opensearch-cluster-master-headless"
+  - name: "cluster.initial_master_nodes"
+    value: "opensearch-cluster-master-0,opensearch-cluster-master-1,opensearch-cluster-master-2"
+  
+  # Bootstrap settings for multi-node cluster
+  - name: "bootstrap.memory_lock"
+    value: "false"
+  
+  # Network and transport settings
+  - name: "network.bind_host"
+    value: "0.0.0.0"
+  - name: "network.publish_host"
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
+  - name: "transport.host"
+    value: "0.0.0.0"
+  - name: "transport.bind_host"
+    value: "0.0.0.0"
+  
+  # Security settings for node communication
+  - name: plugins.security.nodes_dn
+    value: "CN=*.opensearch.svc.cluster.local"
+  - name: plugins.security.allow_default_init_securityindex
+    value: "true"
+  
 extraVolumes:
   - name: opensearch-nodes-cert
     secret:
