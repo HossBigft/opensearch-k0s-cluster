@@ -7,30 +7,6 @@ service:
   headless:
     annotations: {}
 
-config:
-  opensearch.yml: |
-    cluster.name: opensearch-cluster
-    network.host: 0.0.0.0
-    plugins.security.allow_default_init_securityindex: true
-    
-    discovery.seed_hosts: ["opensearch-cluster-master-headless"]
-    cluster.initial_master_nodes: ["opensearch-cluster-0"]
-    node.roles: ["master", "data", "ingest"]
-
-    # disable ml sync job spam in logs
-    plugins.ml_commons.sync_up_job_interval_in_seconds: 0
-    
-    # Custom SSL Transport configuration  
-    plugins.security.ssl.transport.pemcert_filepath: /usr/share/opensearch/config/certs/tls.crt
-    plugins.security.ssl.transport.pemkey_filepath: /usr/share/opensearch/config/certs/tls.key
-    plugins.security.ssl.transport.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/ca.crt
-    plugins.security.ssl.transport.enforce_hostname_verification: false
-    
-    # Custom SSL HTTP configuration
-    plugins.security.ssl.http.enabled: true
-    plugins.security.ssl.http.pemcert_filepath: /usr/share/opensearch/config/certs/tls.crt
-    plugins.security.ssl.http.pemkey_filepath: /usr/share/opensearch/config/certs/tls.key
-    plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/ca.crt
 
 
 # Disable test certs
@@ -58,13 +34,29 @@ extraEnvs:
       secretKeyRef:
         name: opensearch-admin-secret
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+        
+  # Custom SSL Transport configuration
+  - name: plugins.security.ssl.transport.pemcert_filepath
+    value: "/usr/share/opensearch/config/certs/tls.crt"
+  - name: plugins.security.ssl.transport.pemkey_filepath
+    value: "/usr/share/opensearch/config/certs/tls.key"
+  - name: plugins.security.ssl.transport.pemtrustedcas_filepath
+    value: "/usr/share/opensearch/config/certs/ca.crt"
 
+  # Custom SSL HTTP configuration
+  - name: plugins.security.ssl.http.enabled
+    value: "true"
+  - name: plugins.security.ssl.http.pemcert_filepath
+    value: "/usr/share/opensearch/config/certs/tls.crt"
+  - name: plugins.security.ssl.http.pemkey_filepath
+    value: "/usr/share/opensearch/config/certs/tls.key"
+  - name: plugins.security.ssl.http.pemtrustedcas_filepath
+    value: "/usr/share/opensearch/config/certs/ca.crt"
 
 extraVolumes:
   - name: opensearch-nodes-cert
     secret:
       secretName: opensearch-nodes-cert
-
 extraVolumeMounts:
   - name: opensearch-nodes-cert
     mountPath: /usr/share/opensearch/config/certs
