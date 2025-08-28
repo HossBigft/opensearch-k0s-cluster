@@ -12,3 +12,4 @@ spec:
   dnsNames:
     - os.gruzo.kz
     - opensearch.gruzo.kz
+    - api.opensearch.gruzo.kz
