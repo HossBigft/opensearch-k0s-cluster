@@ -100,14 +100,12 @@ extraVolumeMounts:
 
 ingress:
   enabled: true
-  ingressClassName: nginx  
+  ingressClassName: nginx
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  path: /
   hosts:
-    - api.opensearch.gruzo.kz  
+    - api.opensearch.gruzo.kz
   tls:
-    - secretName: os-gruzo-kz-tls
-      hosts:
+    - hosts:
         - api.opensearch.gruzo.kz
+      secretName: os-gruzo-kz-tls
