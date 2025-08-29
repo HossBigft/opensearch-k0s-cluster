@@ -1,4 +1,4 @@
-opensearchHosts: "https://opensearch-cluster-master:9200"
+opensearchHosts: "https://opensearch-cluster-master.opensearch.svc.cluster.local:9200"
 clusterName: "dashboard-cluster"
 disableSecurityDashboardsPlugin: false
 extraEnvs:
@@ -13,7 +13,6 @@ extraEnvs:
 config:
   opensearch_dashboards.yml: |
     server.host: 0.0.0.0
-    opensearch.hosts: [https://opensearch-cluster-master:9200]
     opensearch.ssl.certificateAuthorities: ["/usr/share/opensearch-dashboards/config/certs/ca.crt"]
     opensearch.ssl.verificationMode: certificate
     opensearch.username: admin
