@@ -35,7 +35,7 @@ extraEnvs:
         name: opensearch-admin-secret
         key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
         
-  # Custom SSL Transport configuration
+
   - name: plugins.security.ssl.transport.pemcert_filepath
     value: "/usr/share/opensearch/config/certs/tls.crt"
   - name: plugins.security.ssl.transport.pemkey_filepath
@@ -43,7 +43,6 @@ extraEnvs:
   - name: plugins.security.ssl.transport.pemtrustedcas_filepath
     value: "/usr/share/opensearch/config/certs/ca.crt"
 
-  # Custom SSL HTTP configuration
   - name: plugins.security.ssl.http.enabled
     value: "true"
   - name: plugins.security.ssl.http.pemcert_filepath
@@ -52,7 +51,7 @@ extraEnvs:
     value: "/usr/share/opensearch/config/certs/tls.key"
   - name: plugins.security.ssl.http.pemtrustedcas_filepath
     value: "/usr/share/opensearch/config/certs/ca.crt"
-  # Cluster configuration for multiple nodes
+
   - name: "cluster.name"
     value: "opensearch-cluster"
   - name: "network.host"
@@ -66,11 +65,9 @@ extraEnvs:
   - name: "cluster.initial_master_nodes"
     value: "opensearch-cluster-master-0,opensearch-cluster-master-1,opensearch-cluster-master-2"
   
-  # Bootstrap settings for multi-node cluster
   - name: "bootstrap.memory_lock"
     value: "false"
   
-  # Network and transport settings
   - name: "network.bind_host"
     value: "0.0.0.0"
   - name: "network.publish_host"
@@ -82,7 +79,6 @@ extraEnvs:
   - name: "transport.bind_host"
     value: "0.0.0.0"
   
-  # Security settings for node communication
   - name: plugins.security.nodes_dn
     value: "CN=*.opensearch.svc.cluster.local"
   - name: plugins.security.allow_default_init_securityindex
