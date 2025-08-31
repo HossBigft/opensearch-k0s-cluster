@@ -1,0 +1,29 @@
+installCRDs: true
+
+alertmanager:
+  enabled: false   
+
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.gruzo.kz
+  adminPassword: my-secure-password
+  service:
+    type: LoadBalancer
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.gruzo.kz
+
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    serviceMonitorSelector: {}
+  adminPassword: my-secure-passwordprometheus-password
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.gruzo.kz
+
+
