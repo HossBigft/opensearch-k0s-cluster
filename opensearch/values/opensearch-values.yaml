@@ -83,9 +83,7 @@ extraEnvs:
     value: "CN=*.opensearch.svc.cluster.local"
   - name: plugins.security.allow_default_init_securityindex
     value: "true"
-
-  - name: index.number_of_replicas
-    value: "0"
+    
 extraVolumes:
   - name: opensearch-nodes-cert
     secret:
