@@ -45,7 +45,8 @@ extraVolumeMounts:
 
 ingress:
   enabled: true
-  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
   hosts:
     - host: os.gruzo.kz
       paths:
