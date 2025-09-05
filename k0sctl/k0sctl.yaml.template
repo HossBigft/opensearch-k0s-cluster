@@ -26,7 +26,7 @@ spec:
           - systemctl daemon-reload
     - role: worker
       ssh:
-        address: ${WORKER_IP}
+        address: ${WORKER1_IP}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
     - role: worker
