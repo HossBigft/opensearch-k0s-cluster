@@ -28,7 +28,7 @@ persistence:
 
 extraEnvs:
   - name: OPENSEARCH_JAVA_OPTS
-    value: "-Xms1g -Xmx1g"
+    value: "-Xms4g -Xmx4g"
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
       secretKeyRef:
