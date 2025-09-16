@@ -7,7 +7,7 @@ spec:
   hosts:
     - role: controller
       ssh:
-        address: ${CONTROLLER_IP}
+        address: ${CONTROLLER_IP_PUBLIC}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
       hooks:
@@ -26,17 +26,17 @@ spec:
           - systemctl daemon-reload
     - role: worker
       ssh:
-        address: ${WORKER1_IP}
+        address: ${WORKER1_IP_PUBLIC}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
     - role: worker
       ssh:
-        address: ${WORKER2_IP}
+        address: ${WORKER2_IP_PUBLIC}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
     - role: worker
       ssh:
-        address: ${WORKER3_IP}
+        address: ${WORKER3_IP_PUBLIC}
         user: ${SSH_USER}
         keyPath: ${SSH_PRIVATE_KEY_PATH}
   options:
