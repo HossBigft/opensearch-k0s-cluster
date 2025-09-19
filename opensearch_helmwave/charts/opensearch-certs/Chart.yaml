@@ -1,4 +1,0 @@
-apiVersion: v2
-name: opensearch-certs
-description: Certificates for OpenSearch
-version: 1.0.0
