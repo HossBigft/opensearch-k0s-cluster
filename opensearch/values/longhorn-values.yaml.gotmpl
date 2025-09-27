@@ -14,3 +14,7 @@ ingress:
   path: /
   tls: true
   tlsSecret: longhorn-cert
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: longhorn-ui-password
+    nginx.ingress.kubernetes.io/auth-realm: "Protected Longhorn UI"
