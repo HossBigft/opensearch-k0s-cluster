@@ -1,3 +1,4 @@
+# for templating domains in values
 environments:
   default:
     values:
@@ -29,6 +30,7 @@ hooks:
           echo "Missing secret: opensearch-admin-secret" >&2
           exit 1
         fi
+
   - events: ["prepare"]
     showlogs: true
     command: bash
@@ -39,6 +41,7 @@ hooks:
           echo "Secret longhorn-ui-password doesn't exists or not populated" >&2
           exit 1
         fi
+
 releases:
   - name: cert-manager
     namespace: cert-manager
