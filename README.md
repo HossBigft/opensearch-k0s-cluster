@@ -70,7 +70,20 @@ k0sctl apply
 
 ### 4. Deploy Observability Stack
 
-Use Helmfile to deploy cluster components:
+#### Create longhorn GUI password
+
+```bash
+htpasswd -c logpass USERNAME
+kubectl create secret generic longhorn-ui-password --from-file=logpass -n longhorn-system
+```
+
+#### Set initial opensearch admin password
+
+```bash
+read -s ADMIN_PASS && kubectl create namespace opensearch &&  kubectl create secret generic opensearch-admin-secret --from-literal=OPENSEARCH_INITIAL_ADMIN_PASSWORD="$ADMIN_PASS" -n opensearch
+```
+
+#### Use Helmfile to deploy cluster components:
 
 ```bash
 cd helmfile
