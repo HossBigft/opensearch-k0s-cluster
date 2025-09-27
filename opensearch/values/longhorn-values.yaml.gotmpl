@@ -12,7 +12,10 @@ ingress:
   ingressClassName: nginx
   host: {{ index .Environment.Values.domains.longhorn.main 0 }}
   path: /
-  tls: true
+  tls:
+    - hosts:
+        - {{ index .Environment.Values.domains.longhorn.main 0 }}
+      secretName: longhorn-cert
   tlsSecret: longhorn-cert
   annotations:
     nginx.ingress.kubernetes.io/auth-type: basic
