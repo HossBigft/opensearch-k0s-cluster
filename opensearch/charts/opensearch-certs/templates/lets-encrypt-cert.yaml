@@ -13,3 +13,16 @@ spec:
     - os.gruzo.kz
     - opensearch.gruzo.kz
     - api.opensearch.gruzo.kz
+
+kind: Certificate
+metadata:
+  name: longhorn-cert
+  namespace: longhorn-system
+spec:
+  secretName: longhorn-cert
+  issuerRef:       
+    #le-stag  for testing      
+    name: le-prod
+    kind: Issuer
+  dnsNames:
+    - longhorn.k0s.4100000.xyz

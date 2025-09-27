@@ -1,0 +1,15 @@
+defaultSettings:
+  defaultReplicaCount: "1" 
+  defaultDataPath: /var/lib/longhorn  
+  defaultLonghornStaticStorageClass: longhorn
+persistence:
+  defaultClass: true
+  defaultClassReplicaCount: "1"
+
+ingress:
+  enabled: true
+  ingressClassName: nginx       
+  host: longhorn.k0s.4100000.xyz
+  path: /
+  tls: true
+  tlsSecret: longhorn-cert
