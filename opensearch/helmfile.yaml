@@ -1,3 +1,10 @@
+environments:
+  default:
+    values:
+      - values/domains.yaml
+      
+---
+
 repositories:
   - name: opensearch
     url: https://opensearch-project.github.io/helm-charts
@@ -44,15 +51,8 @@ releases:
     chart: longhorn/longhorn
     createNamespace: true
     values:
-      - values/longhorn-values.yaml
-  
-  # - name: longhorn-ingress
-  #   namespace: longhorn-system
-  #   chart: ./charts/longhorn-ingress
-  #   createNamespace: false
-  #   values:
-  #     - values/longhorn-ingress-values.yaml
-      
+      - values/longhorn-values.yaml.gotmpl
+    
   - name: opensearch
     namespace: opensearch
     chart: opensearch/opensearch

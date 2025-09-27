@@ -1,0 +1,10 @@
+domains:
+  os:
+    main:
+      - os.example.com
+      - opensearch.example.com
+    api:
+      - api.opensearch.example.com
+  longhorn:
+    main:
+      - longhorn.example.com
