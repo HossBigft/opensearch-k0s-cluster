@@ -48,7 +48,9 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
   hosts:
-    - host: os.gruzo.kz
+  hosts:
+    {{- range .Environment.Values.domains.opensearch.dashboard }}
+    - host: {{ . }}
       paths:
         - path: /
           pathType: Prefix
@@ -57,17 +59,10 @@ ingress:
               name: opensearch-dashboards
               port:
                 number: 80
-    - host: opensearch.gruzo.kz
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: opensearch-dashboards
-              port:
-                number: 80
+    {{- end }}
   tls:
     - hosts:
-        - os.gruzo.kz
-        - opensearch.gruzo.kz
-      secretName: os-gruzo-kz-tls   
+        {{- range .Environment.Values.domains.opensearch.dashboard }}
+        - {{ . }}
+        {{- end }}
+      secretName: os-gruzo-kz-tls 

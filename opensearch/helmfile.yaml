@@ -2,7 +2,7 @@ environments:
   default:
     values:
       - values/domains.yaml
-      
+
 ---
 
 repositories:
@@ -65,7 +65,7 @@ releases:
     namespace: opensearch
     chart: opensearch/opensearch-dashboards
     values:
-      - values/dashboard-values.yaml
+      - values/dashboard-values.yaml.gotmpl
 
   - name: ingress-nginx
     namespace: ingress-nginx
