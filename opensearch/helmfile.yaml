@@ -29,7 +29,16 @@ hooks:
           echo "Missing secret: opensearch-admin-secret" >&2
           exit 1
         fi
-
+  - events: ["prepare"]
+    showlogs: true
+    command: bash
+    args:
+      - -c
+      - |
+        if ! kubectl -n longhorn-system get secret longhorn-ui-password -o jsonpath="{.data.auth}" >/dev/null 2>&1; then
+          echo "Secret longhorn-ui-password doesn't exists or not populated" >&2
+          exit 1
+        fi
 releases:
   - name: cert-manager
     namespace: cert-manager
