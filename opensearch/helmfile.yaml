@@ -45,6 +45,8 @@ releases:
     createNamespace: true
     needs:
       - cert-manager/cert-manager
+    values:
+      - values/domains.yaml
 
   - name: longhorn
     namespace: longhorn-system

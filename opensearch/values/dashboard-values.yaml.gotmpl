@@ -65,4 +65,4 @@ ingress:
         {{- range .Environment.Values.domains.opensearch.dashboard }}
         - {{ . }}
         {{- end }}
-      secretName: os-gruzo-kz-tls 
+      secretName: opensearch-dashboard-cert 

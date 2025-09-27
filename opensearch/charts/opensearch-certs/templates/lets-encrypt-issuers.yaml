@@ -1,9 +1,8 @@
 # Staging issuer
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: le-stag
-  namespace: opensearch
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
@@ -17,10 +16,9 @@ spec:
 ---
 # Production issuer
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: le-prod
-  namespace: opensearch
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
