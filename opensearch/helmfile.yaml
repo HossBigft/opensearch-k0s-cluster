@@ -59,7 +59,7 @@ releases:
     needs:
     - opensearch/opensearch-certs
     values:
-      - values/opensearch-values.yaml
+      - values/opensearch-values.yaml.gotmpl
 
   - name: opensearch-dashboards
     namespace: opensearch

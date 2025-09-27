@@ -96,8 +96,12 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   hosts:
-    - api.opensearch.gruzo.kz
+    {{- range .Environment.Values.domains.opensearch.api }}
+        - {{ . }}
+        {{- end }}
   tls:
     - hosts:
-        - api.opensearch.gruzo.kz
+        {{- range .Environment.Values.domains.opensearch.api }}
+        - {{ . }}
+        {{- end }}
       secretName: os-gruzo-kz-tls
