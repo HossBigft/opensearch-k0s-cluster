@@ -1,6 +1,6 @@
 domains:
-  os:
-    main:
+  opensearch:
+    dashboard:
       - os.example.com
       - opensearch.example.com
     api:
