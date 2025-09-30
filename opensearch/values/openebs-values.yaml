@@ -1,0 +1,16 @@
+localprovisioner:
+  enabled: true
+  basePath: "/var/openebs/local"
+  hostpathClass:
+    name: openebs-hostpath
+
+engines:
+  local:
+    enabled: true
+    zfs:
+      enabled: false
+    lvm:
+      enabled: false
+  replicated:
+    mayastor:
+      enabled: false

@@ -5,6 +5,3 @@ domains:
       - opensearch.example.com
     api:
       - api.opensearch.example.com
-  longhorn:
-    main:
-      - longhorn.example.com

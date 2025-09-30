@@ -15,19 +15,3 @@ spec:
     {{- range .Values.domains.opensearch.api }}
     - {{ . }}
     {{- end }}
-
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: longhorn-cert
-  namespace: longhorn-system
-spec:
-  secretName: longhorn-cert
-  issuerRef:
-    name: le-prod
-    kind: ClusterIssuer
-  dnsNames:
-    {{- range .Values.domains.longhorn.main }}
-    - {{ . }}
-    {{- end }}
