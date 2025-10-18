@@ -61,6 +61,7 @@ releases:
 
   - name: opensearch
     namespace: opensearch
+    version: v3.2.1
     chart: opensearch/opensearch
     needs:
     - opensearch/opensearch-certs
@@ -69,17 +70,20 @@ releases:
 
   - name: opensearch-dashboards
     namespace: opensearch
+    version: v3.2.1
     chart: opensearch/opensearch-dashboards
     values:
       - values/dashboard-values.yaml.gotmpl
 
   - name: ingress-nginx
     namespace: ingress-nginx
+    version: v4.13.3 
     chart: ingress-nginx/ingress-nginx 
     values:
       - values/ingress-nginx-values.yaml
 
   - name: openebs
+    version: v4.3.3
     namespace: openebs
     chart: openebs/openebs
     createNamespace: true
