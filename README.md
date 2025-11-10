@@ -21,7 +21,7 @@ Cluster components:
 - **OpenSearch Dashboards** – visualization
 - **cert-manager** – certificate and TLS management
 - **ingress-nginx** – ingress controller
-- **longhorn** - distributed storage management
+- **OpenEBS LocalPV** -  storage management
 
 External agents:
 
@@ -96,7 +96,7 @@ This installs:
 - OpenSearch Dashboards
 - cert-manager
 - ingress-nginx
-- longhorn
+- OpenEBS LocalPV
 
 ### 5. Create OpenSearch user for logshipper
 

@@ -89,10 +89,3 @@ releases:
     createNamespace: true
     values:
       - values/openebs-values.yaml
-
-  # - name: kube-prometheus-stack
-  #   namespace: prometheus
-  #   createNamespace: true
-  #   chart: prometheus-community/kube-prometheus-stack
-  #   values:
-  #     - values/prometheus-stack-values.yaml
